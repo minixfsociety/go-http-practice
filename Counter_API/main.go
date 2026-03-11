@@ -25,17 +25,12 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Нужен POST запрос", http.StatusMethodNotAllowed)
 		return
 	}
-
 	var request AddRequest
-	// Декодируем
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, "Ошибка в JSON", http.StatusBadRequest)
 		return
 	}
-
 	count += request.Amount
-
-	// Хорошим тоном считается ответить клиенту, что всё ок
 	fmt.Fprintf(w, "Добавлено: %d. Теперь счетчик: %d", request.Amount, count)
 }
 
