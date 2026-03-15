@@ -1,34 +1,27 @@
 # Guest Tracker API 📝
 
-Это мой учебный проект на Go для изучения пакета `net/http`. 
-Сервер умеет регистрировать гостей через JSON и вести учет посещений.
+This is a practice project in Go for learning the `net/http` package.
+The server can register guests via JSON and dynamically greet them using the URL path.
 
-## 🚀 Функционал
-* **Регистрация гостя**: Принимает имя в формате JSON.
-* **Безопасность**: Проверка HTTP-методов и заголовков (Content-Type).
-* **Роутинг**: Использование собственного `http.ServeMux`.
+## 🚀 Features
+* **Guest Registration**: Accepts a name in JSON format at the `/enter` endpoint.
+* **Dynamic Echo**: A catch-all handler that reads any path from the URL.
+* **Security**: HTTP method validation and mandatory JSON header check.
+* **Routing**: Uses a custom `http.ServeMux` for organized routing.
 
-## 🛠 Технологии
-* **Язык**: Go (Golang)
-* **Протокол**: HTTP
-* **Формат данных**: JSON
+## 🛠 Tech Stack
+* **Language**: Go (Golang)
+* **Protocol**: HTTP
+* **Logic**: Path handling via `r.URL.Path`.
 
-## 📡 Эндпоинты
+## 📡 Endpoints
 
-### 1. Регистрация гостя
-* **URL**: `/enter`
-* **Метод**: `POST`
-* **Заголовки**: `Content-Type: application/json`
-* **Тело запроса**:
-    ```json
-    {
-      "name": "Minix"
-    }
-    ```
-* **Успешный ответ**: `200 OK` — "Guest Minix registered!"
+### 1. Register Guest (`/enter`)
+* **Method**: `POST`
+* **Body**: `{"name": "Minix"}`
+* **Response**: Registers the guest in the system.
 
-## 🚦 Как запустить
-1. Склонируйте репозиторий.
-2. Запустите сервер:
-   ```bash
-   go run main.go
+### 2. Dynamic Greeting (`/*`)
+* **Method**: ANY
+* **Description**: Uses `r.URL.Path` to greet the user.
+* **Example**: Accessing `localhost:8080/Master` will return: "You are here: /Master".

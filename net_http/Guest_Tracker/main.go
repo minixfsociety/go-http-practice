@@ -16,7 +16,7 @@ func handleEnter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if r.Header.Get("Content-Type") != "application/json" {
-		http.Error(w, "I am waiting for a JSON", http.StatusBadRequest)
+		http.Error(w, "Content-Type must be application/json", http.StatusBadRequest)
 		return
 	}
 	var e Enter
@@ -26,10 +26,16 @@ func handleEnter(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "Guest %v registered!", e.Name)
 }
+func debugHandler(w http.ResponseWriter, r *http.Request) {
+	currentPath := r.URL.Path
+	fmt.Printf("Client requested path: %s\n", currentPath)
+	fmt.Fprintf(w, "You are here: %s", currentPath)
+}
 
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/enter", handleEnter)
+	mux.HandleFunc("/", debugHandler)
 	fmt.Println("Start server")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		fmt.Println("Error:", err)
