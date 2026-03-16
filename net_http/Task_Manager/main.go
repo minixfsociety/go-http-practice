@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 )
 
@@ -52,10 +53,35 @@ func handleListTasks(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleDeleteTask(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method not allowed. Use DELETE", http.StatusMethodNotAllowed)
+		return
+	}
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID format", http.StatusBadRequest)
+		return
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	for i, t := range tasks {
+		if t.ID == id {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			fmt.Printf("Log: Task %d deleted\n", id)
+			fmt.Fprintf(w, "Task %d was successfully deleted", id)
+			return
+		}
+	}
+	http.Error(w, "Task not found", http.StatusNotFound)
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/add", handleAddTask)
 	mux.HandleFunc("/tasks", handleListTasks)
+	mux.HandleFunc("/delete", handleDeleteTask)
 	fmt.Println("Start server")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatalf("Server died: %v", err)

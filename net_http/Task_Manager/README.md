@@ -1,16 +1,18 @@
 # Task Manager API 🚀
 
-This is my second Go project. It is a RESTful API for managing a task list, designed to be **thread-safe** and handle concurrent requests correctly.
+This is my 'Task Manager' Go project. It is a RESTful API for managing a task list, designed to be **thread-safe** and handle concurrent requests correctly.
 
 ## 🧠 What I Learned
 * **Advanced JSON**: Working with `json.NewDecoder` and `json.NewEncoder` to handle data streams.
 * **Concurrency**: Implementing `sync.Mutex` to prevent **Data Races** during simultaneous read/write operations.
 * **Resource Safety**: Using the `defer` keyword to ensure locks are always released (`Unlock`), preventing server deadlocks.
-* **HTTP Standards**: Correctly separating logic between `GET` and `POST` methods and using appropriate HTTP status codes.
+* **HTTP Standards**: Using `GET`, `POST`, and `DELETE` methods with appropriate status codes.
+* **Slice Manipulation**: Implementing custom logic to remove elements from slices without built-in methods.
+* **URL Query Parameters**: Parsing and converting string parameters from URLs using `strconv`.
 
 ## 🛠 Tech Stack
 * **Language**: Go (Golang)
-* **Standard Library**: `net/http`, `encoding/json`, `sync`
+* **Standard Library**: `net/http`, `encoding/json`, `sync`, `strconv`
 
 ## 📡 Endpoints
 
@@ -32,7 +34,14 @@ This is my second Go project. It is a RESTful API for managing a task list, desi
       "Done": false
     }
     ```
-* **Safety**: Uses `mu.Lock()` before performing an `append` to protect the integrity of the slice.
+* **Safety**: Uses `mu.Lock()` before performing an `append`.
+
+### 3. Delete a Task
+* **URL**: `/delete?id={number}`
+* **Method**: `DELETE`
+* **Description**: Removes a specific task from the list using its ID.
+* **Example**: `/delete?id=23`
+* **Safety**: Thread-safe removal using Mutex and slice re-slicing.
 
 ## 🚦 How to Run
 1. Clone the repository.
